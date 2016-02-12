@@ -53,21 +53,27 @@ public class PushAndroid {
     private Logger LOG = LoggerFactory.getLogger(PushAndroid.class);
 
     public List<Result> sendAndroidPushNotification(NotificationEvent notification) {
+
+        if(notification.getRecipient().getUsername().equals(notification.getActor().getUsername())){
+            // We are not sending any messages to the actor
+            return null;
+        }
         List<Result> results = new ArrayList<>();
         try {
             Message message = buildPushMessage(notification);
             Sender sender = new Sender(environment.getProperty("google.server.key"));
             if (notification.getRecipient().getUsername().equalsIgnoreCase("jomski2009")
                     || notification.getRecipient().getUsername().equalsIgnoreCase("phumi1")
+                    || notification.getRecipient().getUsername().equalsIgnoreCase("soulamusic")
                     || notification.getRecipient().getUsername().equalsIgnoreCase("freidaegbuna")
                     || notification.getRecipient().getUsername().equalsIgnoreCase("Alpharogers")
                     || notification.getRecipient().getUsername().equalsIgnoreCase("Tomisin_fashina")
                     || notification.getRecipient().getUsername().equalsIgnoreCase("ritariso")
                     ) {
-                LOG.info("Special user: {}", notification.getRecipient().getUsername());
+                LOG.info(">>>>>>>>>> Special user: {}", notification.getRecipient().getUsername());
 //                Thread.sleep(10000L);
-
             }
+
 
             //Cut back from here later
             List<String> regIds = getRegIdsFor(notification.getRecipient());
@@ -84,7 +90,7 @@ public class PushAndroid {
                                 notification.getActor().getUsername().toLowerCase().equals("pastorchrislive")) {
                             LOG.info("sending PastorChrisLive push to [{}]: {}", notification.getRecipient().getUsername(), pushRegistrationId);
                         } else {
-                            LOG.info(String.format("sending push [%s]: %s", notification.getRecipient().getUsername(), pushRegistrationId));
+                            LOG.info(String.format("sending push from [%s] to [%s]: %s",notification.getActor().getUsername(), notification.getRecipient().getUsername(), pushRegistrationId));
                         }
 
                         results.add(sender.send(message, pushRegistrationId, 1));

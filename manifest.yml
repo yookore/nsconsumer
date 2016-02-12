@@ -1,0 +1,8 @@
+---
+applications:
+  - name: nsconsumer
+    instances: 5
+    no-route: true
+    memory: 2G
+    path: build/libs/nsconsumer-0.1.jar
+
